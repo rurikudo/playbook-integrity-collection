@@ -1,0 +1,25 @@
+# test
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: Sign a playbook SCM repository
+    playbook.integrity.sign:
+      type: "playbook"
+      target: "<PATH/TO/SCM/REPO>"
+      signature_type: "gpg"
+      private_key: "" # use gpg default key if empty
+    register: result
+    # ignore_errors: yes
+
+  # - name: Sign a playbook SCM repository
+  #   playbook.integrity.sign:
+  #     type: "playbook"
+  #     target: "<PATH/TO/SCM/REPO>"
+  #     signature_type: "sigstore"
+  #     private_key: "<PATH/TO/COSIGN/PRIVATEKEY>"
+  #   register: result
+
+  - debug:
+      var: result
+

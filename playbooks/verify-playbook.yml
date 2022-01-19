@@ -1,0 +1,25 @@
+# test
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: Verify a playbook SCM repository
+    playbook.integrity.verify:
+      type: "playbook"
+      target: "<PATH/TO/SCM/REPO>"
+      signature_type: "gpg"
+      public_key: "<PATH/TO/GPG/PUBLICKEY>"
+    register: result
+    # ignore_errors: yes
+
+  # - name: Verify a playbook SCM repository
+  #   playbook.integrity.verify:
+  #     type: "playbook"
+  #     target: "<PATH/TO/SCM/REPO>"
+  #     signature_type: "sigstore"
+  #     public_key: "<PATH/TO/COSIGN/PUBLICKEY>"
+  #   register: result
+  #   # ignore_errors: yes
+
+  - debug:
+      var: result
