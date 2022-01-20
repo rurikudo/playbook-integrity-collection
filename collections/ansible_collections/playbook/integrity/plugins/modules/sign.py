@@ -22,7 +22,7 @@ options:
         description:
         - A type of the resource to be signed. ["playbook"]
         - default: "playbook"
-        required: true
+        required: false
         type: str
     target:
         description:
@@ -88,7 +88,7 @@ from ansible_collections.playbook.integrity.plugins.module_utils.sign import Sig
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        type=dict(type='str', required=True),
+        type=dict(type='str', required=False, default="playbook"),
         target=dict(type='str', required=True),
         signature_type=dict(type='str', required=False, default="gpg"),
         private_key=dict(type='str', required=False, default=""),

@@ -22,7 +22,7 @@ options:
         description:
         - A type of the resource to be verified. ["playbook"]
         - default: "playbook"
-        required: true
+        required: false
         type: str
     target:
         description:
@@ -83,11 +83,12 @@ from ansible_collections.playbook.integrity.plugins.module_utils.verify import V
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        type=dict(type='str', required=True),
+        type=dict(type='str', required=False, default="playbook"),
         target=dict(type='str', required=True),
         signature_type=dict(type='str', required=False, default="gpg"),
         public_key=dict(type='str', required=False, default=""),
         keyless_signer_id=dict(type='str', required=False, default=""),
+        action=dict(type='str', required=False, default="fail")
     )
 
     # seed the result dict in the object
@@ -129,7 +130,7 @@ def run_module():
     # during the execution of the module, if there is an exception or a
     # conditional state that effectively causes a failure, run
     # AnsibleModule.fail_json() to pass in the message and the result
-    if verify_result.get("failed", False):
+    if verify_result.get("failed", False) and module.params["action"] == "fail":
         module.fail_json(msg='Verification failed', **result)
 
     # in the event of a successful module execution, you will want to
