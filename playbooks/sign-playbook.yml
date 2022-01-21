@@ -5,20 +5,11 @@
   tasks:
   - name: Sign a playbook SCM repository
     playbook.integrity.sign:
-      type: "playbook"
-      target: "<PATH/TO/SCM/REPO>"
-      signature_type: "gpg"
-      private_key: "" # use gpg default key if empty
+      target: "{{ repo | default('<PATH/TO/REPO>') }}"
+      signature_type: "{{ sigtype | default('gpg') }}"
+      private_key: "{{ key | default('') }}"   # if empty, use gpg's default keyring
     register: result
     # ignore_errors: yes
-
-  # - name: Sign a playbook SCM repository
-  #   playbook.integrity.sign:
-  #     type: "playbook"
-  #     target: "<PATH/TO/SCM/REPO>"
-  #     signature_type: "sigstore"
-  #     private_key: "<PATH/TO/COSIGN/PRIVATEKEY>"
-  #   register: result
 
   - debug:
       var: result

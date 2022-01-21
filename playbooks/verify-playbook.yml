@@ -5,21 +5,12 @@
   tasks:
   - name: Verify a playbook SCM repository
     playbook.integrity.verify:
-      type: "playbook"
-      target: "<PATH/TO/SCM/REPO>"
-      signature_type: "gpg"
-      public_key: "<PATH/TO/GPG/PUBLICKEY>"
+      target: "{{ repo | default('<PATH/TO/REPO>') }}"
+      signature_type: "{{ sigtype | default('gpg') }}"
+      public_key: "{{ key | default('') }}"   # if empty, use gpg's default keyring
+      keyless_signer_id: "{{ signer | default('') }}"
     register: result
     # ignore_errors: yes
-
-  # - name: Verify a playbook SCM repository
-  #   playbook.integrity.verify:
-  #     type: "playbook"
-  #     target: "<PATH/TO/SCM/REPO>"
-  #     signature_type: "sigstore"
-  #     public_key: "<PATH/TO/COSIGN/PUBLICKEY>"
-  #   register: result
-  #   # ignore_errors: yes
 
   - debug:
       var: result

@@ -7,6 +7,8 @@ class Signer:
     def __init__(self, params):
         self.type = params.get("type", "")
         self.target = params.get("target", "")
+        if self.target.startswith("~/"):
+            self.target = os.path.expanduser(self.target)
         self.signature_type = params.get("signature_type", "gpg")
         self.private_key = params.get("private_key", "")
         self.public_key = params.get("public_key", "")
@@ -52,7 +54,7 @@ class Signer:
         if not os.path.exists(path):
             raise ValueError("the directory \"{}\" does not exists".format(path))
 
-        cmd = "cd {}; gpg --sign {}".format(path, filename)
+        cmd = "cd {}; gpg --detach-sign {}".format(path, filename)
         result = common.execute_command(cmd)
         return result
 

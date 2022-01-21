@@ -8,6 +8,8 @@ class Verifier:
     def __init__(self, params):
         self.type = params.get("type", "")
         self.target = params.get("target", "")
+        if self.target.startswith("~/"):
+            self.target = os.path.expanduser(self.target)
         self.signature_type = params.get("signature_type", "gpg")
         self.public_key = params.get("public_key", "")
         self.keyless_signer_id = params.get("keyless_signer_id", "")
@@ -29,7 +31,7 @@ class Verifier:
             return result
 
         if self.signature_type == common.SIGNATURE_TYPE_GPG:
-            result["verify_result"] = self.verify_gpg(self.target, common.SIGNATURE_FILENAME_GPG, self.public_key)
+            result["verify_result"] = self.verify_gpg(self.target, common.SIGNATURE_FILENAME_GPG, common.DIGEST_FILENAME, self.public_key)
         elif self.signature_type in [common.SIGNATURE_TYPE_SIGSTORE, common.SIGNATURE_TYPE_SIGSTORE_KEYLESS]:
             keyless = True if self.signature_type == common.SIGNATURE_TYPE_SIGSTORE_KEYLESS else False
             type = common.SIGSTORE_TARGET_TYPE_FILE
@@ -42,7 +44,7 @@ class Verifier:
 
         return result
 
-    def verify_gpg(self, path, sigfile, publickey=""):
+    def verify_gpg(self, path, sigfile, msgfile, publickey=""):
         if not os.path.exists(path):
             raise ValueError("the directory \"{}\" does not exists".format(path))
 
@@ -58,7 +60,7 @@ class Verifier:
                 pass
             gpghome_option = "GNUPGHOME={}".format(common.TMP_GNUPG_HOME_DIR)
             keyring_option = "--no-default-keyring --keyring {}".format(publickey)
-        cmd = "cd {}; {} gpg --verify {} {}".format(path, gpghome_option, keyring_option, sigfile)
+        cmd = "cd {}; {} gpg --verify {} {} {}".format(path, gpghome_option, keyring_option, sigfile, msgfile)
         result = common.execute_command(cmd)
         return result
 

@@ -15,7 +15,7 @@ SIGSTORE_TARGET_TYPE_FILE = "file"
 SCM_TYPE_GIT = "git"
 
 DIGEST_FILENAME = "sha256sum.txt"
-SIGNATURE_FILENAME_GPG = "sha256sum.txt.gpg"
+SIGNATURE_FILENAME_GPG = "sha256sum.txt.sig"
 SIGNATURE_FILENAME_SIGSTORE = "sha256sum.txt.sig"
 
 CHECKSUM_OK_IDENTIFIER = ": OK"
@@ -25,6 +25,8 @@ TMP_COSIGN_PATH = "/tmp/cosign"
 class Digester:
     def __init__(self, path):
         self.path = path
+        if path.startswith("~/"):
+            self.path = os.path.expanduser(path)
         self.type = self.get_scm_type(path)
 
     # TODO: implement this
@@ -129,7 +131,9 @@ def execute_command(cmd="", env_params=None, timeout=None):
     result = subprocess.run(
             cmd, shell=True, env=env, timeout=timeout,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    return result_object_to_dict(result)
+    result = result_object_to_dict(result)
+    result["command"] = cmd
+    return result
 
 
 def get_cosign_path():

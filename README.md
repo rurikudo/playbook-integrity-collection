@@ -8,8 +8,8 @@ This is useful for checking playbook file integrity before calling them.
 
 ```
 # sign
-$ ansible-playbook playbooks/sign-playbook.yml -e target=<PATH/TO/REPO>
+$ ansible-playbook playbooks/sign-playbook.yml -e repo=<PATH/TO/REPO>
 
 $ verify
-$ ansible-playbook playbooks/verify-playbook.yml -e target=<PATH/TO/REPO>
+$ ansible-playbook playbooks/verify-playbook.yml -e repo=<PATH/TO/REPO>
 ```
