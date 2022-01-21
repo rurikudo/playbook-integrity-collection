@@ -82,6 +82,7 @@ message:
     sample: 'goodbye'
 '''
 
+import traceback
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.playbook.integrity.plugins.module_utils.sign import Signer
 
@@ -125,7 +126,11 @@ def run_module():
     # part where your module will do what it needs to do)
 
     signer = Signer(module.params)
-    sign_result = signer.sign()
+    try:
+        sign_result = signer.sign()
+    except Exception:
+        sign_result = {"failed": True}
+        sign_result["traceback"] = traceback.format_exc()
     result['detail'] = sign_result
 
     # use whatever logic you need to determine whether or not this module

@@ -155,7 +155,7 @@ def get_cosign_path():
     else:
         arch = machine
 
-    cmd2 = "curl -sL -o {} https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-{}-{}".format(TMP_COSIGN_PATH, os_name, arch)
+    cmd2 = "curl -sL -o {} https://github.com/sigstore/cosign/releases/download/v1.4.1/cosign-{}-{} && chmod +x {}".format(TMP_COSIGN_PATH, os_name, arch, TMP_COSIGN_PATH)
     result = execute_command(cmd2)
     if result["returncode"] == 0:
         cmd3 = "{} initialize".format(TMP_COSIGN_PATH)

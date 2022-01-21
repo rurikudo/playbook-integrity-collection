@@ -77,6 +77,7 @@ message:
     sample: 'goodbye'
 '''
 
+import traceback
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.playbook.integrity.plugins.module_utils.verify import Verifier
 
@@ -120,7 +121,11 @@ def run_module():
     # part where your module will do what it needs to do)
 
     verifier = Verifier(module.params)
-    verify_result = verifier.verify()
+    try:
+        verify_result = verifier.verify()
+    except Exception:
+        verify_result = {"failed": True}
+        verify_result["traceback"] = traceback.format_exc()
     result['detail'] = verify_result
 
     # use whatever logic you need to determine whether or not this module
