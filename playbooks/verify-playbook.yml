@@ -8,7 +8,6 @@
       target: "{{ repo | default('<PATH/TO/REPO>') }}"
       signature_type: "{{ sigtype | default('gpg') }}"
       public_key: "{{ key | default('') }}"   # if empty, use gpg's default keyring
-      keyless_signer_id: "{{ signer | default('') }}"
     register: result
     # ignore_errors: yes
 

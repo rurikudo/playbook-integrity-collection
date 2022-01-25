@@ -1,4 +1,5 @@
 
+from hmac import digest
 import os
 import platform
 import subprocess
@@ -50,6 +51,13 @@ class Digester:
 
     def filename_check(self):
         digest_file = os.path.join(self.path, DIGEST_FILENAME)
+        if not os.path.exists(digest_file):
+            return dict(
+                returncode=1,
+                stdout="",
+                stderr="No such file or directory: {}".format(digest_file)
+            )
+
         tmp_digest_file = os.path.join("/tmp/", DIGEST_FILENAME)
         result = self.gen(filename=tmp_digest_file)
         if result["returncode"] != 0:
