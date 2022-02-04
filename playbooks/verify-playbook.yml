@@ -1,0 +1,15 @@
+# test
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: Verify a playbook SCM repository
+    playbook.integrity.verify:
+      target: "{{ repo | default('<PATH/TO/REPO>') }}"
+      signature_type: "{{ sigtype | default('gpg') }}"
+      public_key: "{{ key | default('') }}"   # if empty, use gpg's default keyring
+    register: result
+    # ignore_errors: yes
+
+  - debug:
+      var: result
